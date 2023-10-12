@@ -1,0 +1,28 @@
+/* Typography */
+@import url("https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital@0;1&family=Raleway&display=swap");
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Merriweather Sans", sans-serif;
+}
+
+.italic {
+  font-style: italic;
+}
+
+:root {
+  --orangeBg: #eaa523;
+  --complementaryColor: #563d8d;
+  --stdBoxshadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+}
+
+body {
+  margin: 0;
+  background: var(--orangeBg);
+  font-family: "Raleway", sans-serif;
+  text-transform: capitalize;
+}
