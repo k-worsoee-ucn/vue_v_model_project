@@ -1,3 +1,28 @@
+<script setup>
+import { ref } from "vue"
+
+const products = ref()
+const username = ref()
+const email = ref()
+const leDatabase = []
+
+function submit() {
+  leDatabase.push({
+    name: username.value,
+    email: email.value
+  })
+  console.log(leDatabase)
+  alert(`Congrats! You've signed up for our dumb newsletter with Username: ${username.value} and Email: ${email.value}`)
+}
+
+
+fetch("https://mahauser2.github.io/productsDummyJson/products.json")
+  .then(res => res.json())
+  .then(data => {
+    products.value = data
+  })
+</script>
+
 <template>
   <!-- 1: Start out by fetching the products from https://mahauser2.github.io/productsDummyJson/products.json - store the fetched data in state  -->
 
@@ -28,41 +53,41 @@
 
   <div class="newsletter center">
     <p>Sign up for our newsletter here!</p>
-    <form>
+    <form @submit.prevent="submit">
       <div>
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Username:" required />
+        <input v-model="username" type="text" id="username" name="username" placeholder="Username:" required />
       </div>
       <div>
         <label for="email">email:</label>
-        <input type="email" id="email" name="email" placeholder="Email:" required />
+        <input v-model="email" type="email" id="email" name="email" placeholder="Email:" required />
       </div>
-      <button>Sign Up</button>
+      <button >Sign Up</button>
     </form>
   </div>
   <div class="product-wrapper center">
-    <div class="card">
+    <div class="card" v-for="product in products">
+      <span v-if="product.category == 'electronics'" class="rotate">On Sale</span>
       <div class="product">
         <div class="product-image">
-          <img src="https://raw.githubusercontent.com/mahaUser2/productsDummyJson/main/81fPKd-2AYL._AC_SL1500_.jpg" alt="Some bag" />
+          <img :src="product.image" alt="Some bag" />
         </div>
         <div class="product-info">
           <header>
-            <h3>Taske</h3>
-            <p class="price">2000000kr</p>
-            <p class="category">Taske</p>
+            <h3 :class="{ featured: product.category == 'electronics' }">{{ product.title }}</h3>
+            <p class="price">{{ product.price }}</p>
+            <p class="category">{{ product.category }}</p>
           </header>
-          <p class="description">Her er en taske</p>
-          <p class="stock">In stock: 300</p>
+          <p class="description">{{ product.description }}</p>
+          <p :class="{ red: product.rating.count < 100, green: product.rating.count >= 100 }" class="stock">In stock: {{
+            product.rating.count }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-// State
-</script>
+
 
 <style scoped>
 .center {
@@ -87,6 +112,7 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
 .card {
   display: flex;
   flex-direction: column;
@@ -108,22 +134,27 @@ header {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 header h3,
 header .category {
   width: 50%;
 }
-header > * {
+
+header>* {
   margin-top: 20px;
 }
+
 header h3 {
   font-size: 14px;
   line-height: 130%;
 }
+
 header .category {
   font-weight: bold;
   color: #6d6d6d;
   margin-top: 5px;
 }
+
 header .price {
   color: var(--orangeBg);
   font-size: 18px;
@@ -137,32 +168,38 @@ header .price {
 .newsletter {
   padding: 1rem;
 }
-.newsletter > * {
+
+.newsletter>* {
   margin: 5px;
 }
+
 .newsletter p {
   color: var(--complementaryColor);
   font-size: 18px;
   font-weight: bold;
   margin: 1rem 0;
 }
+
 .newsletter form {
   display: flex;
   flex-direction: column;
   max-width: 400px;
 }
-.newsletter form > div {
+
+.newsletter form>div {
   display: flex;
   justify-content: space-between;
   max-width: 400px;
   margin: 5px;
 }
+
 .newsletter input {
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
   box-shadow: var(--stdBoxshadow);
 }
+
 .newsletter button {
   color: #eee;
   margin-top: 0.5rem;
